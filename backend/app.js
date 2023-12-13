@@ -9,6 +9,8 @@ app.use(cors({origin: 'http://localhost:3000'}));
 // Get all file names
 app.get('/files/data', async (req, res) => {
     const response = await doAPICall('/secret/files');
+    if (!response.files) return res.json([]);
+
     // Prepare the calls to get files' data and execute them
     const promises = response.files.map((file) => doAPICall(`/secret/file/${file}`));
     const fileList = await Promise.all(promises);
@@ -36,7 +38,7 @@ app.get('/files/data/:fileName', async (req, res) => {
     // Return an array with an object with the filename and its lines
     return res.json([{
         file: fileName,
-        lines
+        lines: lines || []
     }]);
 });
 

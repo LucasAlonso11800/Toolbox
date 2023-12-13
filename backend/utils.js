@@ -30,11 +30,12 @@ const getFileLines = (file) => {
 
     // To get the lines we separate the file on the line breaks and iterate over it, formatting the values into an object
     const lines = file.split('\n').reduce((linesAcc, line) => {
-        // Skip the headers and columns with invalid lengths 
+        // Skip the headers and columns with invalid lengths or empty values
         if (line === headers) return linesAcc;
         const columns = line.split(',');
         if (columns.length !== 4) return linesAcc;
-
+        if (columns.some(value => !value)) return linesAcc;
+        
         return [...linesAcc, {
             file: columns[0],
             text: columns[1],
